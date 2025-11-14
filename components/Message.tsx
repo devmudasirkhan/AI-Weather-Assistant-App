@@ -17,18 +17,21 @@ export default function Message({ message }: { message: UIMessage }) {
   const isUser = role === 'user';
 
   return (
-   <div className={`flex w-full px-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
+   <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`max-w-[78%] px-5 py-3 rounded-2xl shadow-md 
+        className={`max-w-[85%] md:max-w-[75%] px-5 py-3.5 rounded-2xl shadow-lg
         ${isUser 
-          ? 'bg-indigo-600 text-white rounded-br-none' 
-          : 'bg-white text-gray-900 border border-gray-200 rounded-bl-none'
+          ? 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-br-sm shadow-indigo-500/30' 
+          : 'bg-gray-800 text-gray-100 border border-gray-700/50 rounded-bl-sm shadow-gray-900/50'
         }`}
       >
         {/* Normal Text */}
-        {textContent && <p className="whitespace-pre-wrap text-[15px]">{textContent}</p>}
+        {textContent && (
+          <p className={`whitespace-pre-wrap text-[15px] leading-relaxed ${isUser ? 'text-white' : 'text-gray-100'}`}>
+            {textContent}
+          </p>
+        )}
 
-        {/* Tool Call UI */}
         {toolCalls.length > 0 && (
           <div className="mt-3">
             {toolCalls.map((tc: any, i) => (
@@ -37,9 +40,8 @@ export default function Message({ message }: { message: UIMessage }) {
           </div>
         )}
 
-        {/* Tool Results */}
         {toolResults.length > 0 && (
-          <div className="mt-3 space-y-3">
+          <div className="mt-4 space-y-3">
             {toolResults.map((toolRes: any, i) => {
               if (toolRes.toolName === 'get_current_weather') {
                 return <WeatherCard key={i} {...toolRes.result} />;

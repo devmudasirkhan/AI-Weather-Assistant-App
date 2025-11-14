@@ -2,18 +2,31 @@
 
 import Conversation from '../components/Conversation';
 import PromptInput from '../components/PromptInput';
+import LoginScreen from '../components/LoginScreen';
 import { useState, useEffect } from 'react';
 import { UIMessage } from '@ai-sdk/react';
 
 export default function Page() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [messages, setMessages] = useState<UIMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
+  useEffect(() => {
+    const authStatus = localStorage.getItem('weather-assistant-auth');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+    }
+    setCheckingAuth(false);
+  }, []);
+
 
   useEffect(() => {
+    if (!isAuthenticated) return;
+    
     const saved = localStorage.getItem('weather-chat-history');
     if (saved) {
       const parsed = JSON.parse(saved);
@@ -34,7 +47,7 @@ export default function Page() {
       setMessages(normalized);
     }
     setLoaded(true);
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (!loaded) return;
@@ -128,11 +141,36 @@ export default function Page() {
     }
   };
 
-  return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-50 to-white">
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
 
-      <header className="p-4 border-b text-center text-lg font-semibold text-gray-800 shadow-sm shrink-0">
-        Gemini Weather Assistant
+  if (checkingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-indigo-950">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginScreen onLogin={handleLogin} />;
+  }
+
+  return (
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-indigo-950">
+
+      <header className="p-5 border-b border-gray-700/50 bg-gray-800/80 backdrop-blur-xl shadow-lg shrink-0">
+        <div className="max-w-4xl mx-auto flex items-center justify-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+            </svg>
+          </div>
+          <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+            Gemini Weather Assistant
+          </h1>
+        </div>
       </header>
 
       <Conversation messages={messages} isTyping={isTyping} />
@@ -140,7 +178,7 @@ export default function Page() {
       <PromptInput
         input={input}
         isLoading={isLoading}
-        handleInputChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
+        handleInputChange={(e: any) => setInput(e.target.value)}
         handleSubmit={handleSubmit}
       />
     </div>
