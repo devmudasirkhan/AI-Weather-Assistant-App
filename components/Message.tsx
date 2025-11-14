@@ -26,7 +26,7 @@ export default function Message({ message }: { message: UIMessage }) {
         }`}
       >
         {/* Normal Text */}
-        {textContent && (
+        {isUser && textContent && (
           <p className={`whitespace-pre-wrap text-[15px] leading-relaxed ${isUser ? 'text-white' : 'text-gray-100'}`}>
             {textContent}
           </p>
