@@ -57,7 +57,6 @@ export default function WeatherCard({
         </div>
         <div className={`${iconColor} ml-2 sm:ml-3`}>
           <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="currentColor" viewBox="0 0 20 20">
-            {/* svg path */}
           </svg>
         </div>
       </div>
