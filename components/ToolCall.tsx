@@ -10,8 +10,6 @@ export default function ToolCallUI({
   loading: boolean;
 }) {
 
-  console.log(params, "toolcallparams");
-
   return (
     <div className="border border-gray-700 bg-gray-900 rounded-xl p-3 text-white">
       <div className="font-bold text-blue-400 text-sm">
