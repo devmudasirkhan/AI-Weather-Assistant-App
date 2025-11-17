@@ -53,16 +53,26 @@ export async function POST(req: NextRequest) {
     async start(controller) {
       const encoder = new TextEncoder();
       for await (const chunk of result.fullStream) {
+        console.log(chunk)
         if (chunk.type === 'text-delta') {
           controller.enqueue(encoder.encode(chunk.text));
-        } else if (chunk.type === 'tool-result') {
+        } else if (chunk.type === 'tool-call') {
+          const toolCall = JSON.stringify({
+            type: 'tool-call',
+            toolName: chunk.toolName,
+            args: chunk.input,
+          });
+          controller.enqueue(encoder.encode(`\n__TOOLCALL__${toolCall}__TOOLCALL__\n`));
+        }
+        else if (chunk.type === 'tool-result') {
           const toolData = JSON.stringify({
             type: 'tool-result',
             toolName: chunk.toolName,
             result: chunk.output,
           });
-          controller.enqueue(encoder.encode(`\n__TOOL__${toolData}__TOOL__\n`));
+          controller.enqueue(encoder.encode(`\n__TOOLRESULT__${toolData}__TOOLRESULT__\n`));
         }
+
       }
       controller.close();
     },
