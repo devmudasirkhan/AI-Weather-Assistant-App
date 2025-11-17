@@ -108,8 +108,6 @@ export default function Page() {
 
           const chunk = decoder.decode(value, { stream: true });
 
-          console.log(chunk, "streamchunk");
-
           const toolCallMatches = [...chunk.matchAll(/__TOOLCALL__(.*?)__TOOLCALL__/gs)];
           toolCallMatches.forEach((m) => {
             try {

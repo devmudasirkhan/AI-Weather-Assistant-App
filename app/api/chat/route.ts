@@ -53,7 +53,6 @@ export async function POST(req: NextRequest) {
     async start(controller) {
       const encoder = new TextEncoder();
       for await (const chunk of result.fullStream) {
-        console.log(chunk)
         if (chunk.type === 'text-delta') {
           controller.enqueue(encoder.encode(chunk.text));
         } else if (chunk.type === 'tool-call') {
