@@ -35,7 +35,8 @@ npm install
 ### **2. Configure environment variables**
 
 Create a file named `.env.local` in the project root.
-Use .env.local.example as a reference for which keys are required.
+
+Use `.env.local.example` as a reference for which keys are required.
 
 
 ### **3. Start the development server**

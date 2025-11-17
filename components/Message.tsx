@@ -6,23 +6,12 @@ import ToolCallUI from './ToolCall';
 export default function Message({ message }: { message: UIMessage }) {
   const { role, parts } = message;
 
-
-  console.log(parts, "messageparts");
-
   const textContent = parts
     .filter((p: any) => p.type === 'text')
     .map((p: any) => p.text)
     .join('');
 
-  const toolCalls = parts
-    .filter((p: any) => p.type === 'tool-call')
-  // .map((p: any) => ({
-  //   toolName: p.toolName,
-  //   params: p.input, // 👈 IMPORTANT
-  // }));
-
-  console.log(toolCalls, "toolcalls");
-
+  const toolCalls = parts.filter((p: any) => p.type === 'tool-call')
   const toolResults = parts.filter((p: any) => p.type === 'tool-result');
 
   const isUser = role === 'user';
@@ -65,8 +54,6 @@ export default function Message({ message }: { message: UIMessage }) {
           </div>
         )}
 
-
-        {/* TOOL RESULT UI */}
         {toolResults.length > 0 && (
           <div className="mt-4 space-y-3">
             {toolResults.map((toolRes: any, i) => {
